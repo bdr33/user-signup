@@ -1,4 +1,11 @@
 from flask import Flask, request
+import cgi
+import os
+import jinja2
+
+template_dir= os.path.join(os.path.dirname(__file__), 'templates')
+jinja_env= jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape=True)
+
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -80,15 +87,17 @@ def validate_form():
     if password_ver == "" or password_ver != password:
         password_ver_error = "Passwords don't match"
     
-    if len(email) <3 or len(email)>20 or " " in email: 
-        email_error='Please enter a valid email'
-    else: 
-        if email.count('@') != 1 or email.count('.') !=1:
+    if email !="":
+        if len(email) <3 or len(email)>20 or " " in email: 
             email_error='Please enter a valid email'
-    
+        else: 
+            if email.count('@') != 1 or email.count('.') !=1:
+                email_error='Please enter a valid email'
+        
 
     if not user_name_error and not password_error and not password_ver_error and not email_error:
-        return '<h1>Hello, ' + user_name + '</h1>'
+        template = jinja_env.get_template('welcome.html')
+        return template.render(user_name=user_name)
 
     else: 
         return form.format(user_name=user_name, password='', 
