@@ -15,7 +15,7 @@ app.config['DEBUG'] = True
 def index():
     template = jinja_env.get_template('index_form.html')
     return template.render()
-    
+
 @app.route("/validate-form", methods=['POST'])
 def validate_form():
 
@@ -64,7 +64,8 @@ def validate_form():
         return template.render(user_name=user_name)
 
     else: 
-        return form.format(user_name=user_name, password='', 
+        template = jinja_env.get_template('index_form.html')
+        return template.render(user_name=user_name, password='', 
         password_ver='', email=email, user_name_error=user_name_error, password_error=password_error,
          password_ver_error=password_ver_error, email_error=email_error)
 
